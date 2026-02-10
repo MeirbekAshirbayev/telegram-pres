@@ -37,13 +37,16 @@ func isUserMember(userID int64, channelID int64) (bool, error) {
 	return false, nil
 }
 
-func PostPresentationToChannel(channelID int64, title, presentationURL string) error {
+func PostPresentationToChannel(channelID int64, topicID int64, title, presentationURL string) error {
 	// Create a formatted message: [Title](URL)
 	// Using HTML parse mode for cleaner links: <a href="URL">Title</a>
 	msgText := fmt.Sprintf("📚 <b>%s</b>\n\n👇 Көру үшін басыңыз:\n<a href=\"%s\">%s</a>", title, presentationURL, title)
 
 	msg := tgbotapi.NewMessage(channelID, msgText)
 	msg.ParseMode = "HTML"
+	if topicID != 0 {
+		msg.ReplyToMessageID = int(topicID)
+	}
 
 	_, err := bot.Send(msg)
 	return err

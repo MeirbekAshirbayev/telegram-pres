@@ -91,7 +91,10 @@ func main() {
 	r.HandleFunc("/auth/telegram", telegramAuthHandler).Methods("GET")
 	r.HandleFunc("/auth/telegram", telegramAuthHandler).Methods("GET")
 	r.HandleFunc("/view/{id}", viewHandler).Methods("GET")
-	r.HandleFunc("/post/{id}", postHandler).Methods("POST") // Use POST for actions
+	r.HandleFunc("/admin/add", adminAddHandler).Methods("GET", "POST")        // New Admin Route
+	r.HandleFunc("/admin/edit/{id}", adminEditHandler).Methods("GET", "POST") // Edit Route
+	r.HandleFunc("/admin/delete/{id}", adminDeleteHandler).Methods("POST")    // Delete Route
+	r.HandleFunc("/post/{id}", postHandler).Methods("POST")                   // Use POST for actions
 
 	log.Printf("Server starting on %s", appConfig.Port)
 	err = http.ListenAndServe(appConfig.Port, r)
@@ -304,7 +307,7 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 	viewURL := appConfig.BaseURL + "/view/" + id
 
 	// Send to Telegram
-	err = PostPresentationToChannel(presentation.AllowedChannelID, presentation.Title, viewURL)
+	err = PostPresentationToChannel(presentation.AllowedChannelID, presentation.TopicID, presentation.Title, viewURL)
 	if err != nil {
 		log.Printf("Error posting to channel: %v", err)
 		http.Error(w, "Failed to post to Telegram: "+err.Error(), http.StatusInternalServerError)
@@ -313,4 +316,123 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Redirect back to dashboard with success message (or just back)
 	http.Redirect(w, r, "/?posted=true", http.StatusSeeOther)
+}
+
+func adminAddHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		templates.ExecuteTemplate(w, "admin_add.html", nil)
+		return
+	}
+
+	if r.Method == "POST" {
+		err := r.ParseForm()
+		if err != nil {
+			http.Error(w, "Error parsing form", http.StatusBadRequest)
+			return
+		}
+
+		title := r.FormValue("title")
+		groupName := r.FormValue("group_name")
+		canvaURL := r.FormValue("canva_url")
+		channelIDStr := r.FormValue("channel_id")
+		topicIDStr := r.FormValue("topic_id")
+
+		var channelID int64
+		fmt.Sscanf(channelIDStr, "%d", &channelID)
+
+		var topicID int64
+		if topicIDStr != "" {
+			fmt.Sscanf(topicIDStr, "%d", &topicID)
+		}
+
+		// Generate simple unique ID
+		id := fmt.Sprintf("pres-%d", time.Now().Unix())
+
+		p := Presentation{
+			ID:               id,
+			Title:            title,
+			GroupName:        groupName,
+			CanvaEmbedURL:    canvaURL,
+			AllowedChannelID: channelID,
+			TopicID:          topicID,
+		}
+
+		err = addPresentation(p)
+		if err != nil {
+			log.Printf("Error saving presentation: %v", err)
+			http.Error(w, "Error saving presentation: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+	// Redirect back to dashboard with success message (or just back)
+	http.Redirect(w, r, "/?added=true", http.StatusSeeOther)
+}
+
+func adminEditHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	if r.Method == "GET" {
+		p, err := getPresentation(id)
+		if err != nil {
+			http.Error(w, "Presentation not found", http.StatusNotFound)
+			return
+		}
+		templates.ExecuteTemplate(w, "admin_edit.html", p)
+		return
+	}
+
+	if r.Method == "POST" {
+		err := r.ParseForm()
+		if err != nil {
+			http.Error(w, "Error parsing form", http.StatusBadRequest)
+			return
+		}
+
+		title := r.FormValue("title")
+		groupName := r.FormValue("group_name")
+		canvaURL := r.FormValue("canva_url")
+		channelIDStr := r.FormValue("channel_id")
+		topicIDStr := r.FormValue("topic_id")
+
+		var channelID int64
+		fmt.Sscanf(channelIDStr, "%d", &channelID)
+
+		var topicID int64
+		if topicIDStr != "" {
+			fmt.Sscanf(topicIDStr, "%d", &topicID)
+		}
+
+		p := Presentation{
+			ID:               id,
+			Title:            title,
+			GroupName:        groupName,
+			CanvaEmbedURL:    canvaURL,
+			AllowedChannelID: channelID,
+			TopicID:          topicID,
+		}
+
+		err = updatePresentation(p)
+		if err != nil {
+			log.Printf("Error updating presentation: %v", err)
+			http.Error(w, "Error updating presentation", http.StatusInternalServerError)
+			return
+		}
+
+		http.Redirect(w, r, "/?updated=true", http.StatusSeeOther)
+	}
+}
+
+func adminDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	err := deletePresentation(id)
+	if err != nil {
+		log.Printf("Error deleting presentation: %v", err)
+		http.Error(w, "Error deleting presentation", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/?deleted=true", http.StatusSeeOther)
 }

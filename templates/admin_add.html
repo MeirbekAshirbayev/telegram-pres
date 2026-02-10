@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Presentation</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            background: #f0f2f5;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: #0088cc;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background: #0077b5;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: #666;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Жаңа Презентация Қосу</h2>
+        <form action="/admin/add" method="POST">
+            <div class="form-group">
+                <label>Тақырыбы (Title)</label>
+                <input type="text" name="title" required placeholder="Мысалы: Бөлшектер">
+            </div>
+
+            <div class="form-group">
+                <label>Сынып (Grade)</label>
+                <select name="group_name">
+                    <option value="5-сынып">5-сынып</option>
+                    <option value="6-сынып">6-сынып</option>
+                    <option value="7-сынып">7-сынып</option>
+                    <option value="8-сынып">8-сынып</option>
+                    <option value="9-сынып">9-сынып</option>
+                    <option value="10-сынып">10-сынып</option>
+                    <option value="11-сынып">11-сынып</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Canva URL (Embed link)</label>
+                <input type="url" name="canva_url" required placeholder="https://www.canva.com/.../view?embed">
+            </div>
+
+            <div class="form-group">
+                <label>Channel ID (Қай чатқа?)</label>
+                <input type="text" name="channel_id" required value="-1003814950604" placeholder="-100...">
+            </div>
+
+            <div class="form-group">
+                <label>Topic ID (Қай папкаға?)</label>
+                <input type="number" name="topic_id" value="0" placeholder="0 = Жалпы чат">
+                <small style="color: #666;">Егер Topic болмаса, 0 деп қалдырыңыз.</small>
+            </div>
+
+            <button type="submit">Сақтау</button>
+        </form>
+        <a href="/" class="back-link">← Артқа қайту</a>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Presentation</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            background: #f0f2f5;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: #ffc107;
+            color: #333;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background: #e0a800;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: #666;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Презентацияны Өңдеу</h2>
+        <form action="/admin/edit/{{.ID}}" method="POST">
+            <div class="form-group">
+                <label>Тақырыбы (Title)</label>
+                <input type="text" name="title" required value="{{.Title}}">
+            </div>
+
+            <div class="form-group">
+                <label>Сынып (Grade)</label>
+                <select name="group_name">
+                    <option value="5-сынып" {{if eq .GroupName "5-сынып" }}selected{{end}}>5-сынып</option>
+                    <option value="6-сынып" {{if eq .GroupName "6-сынып" }}selected{{end}}>6-сынып</option>
+                    <option value="7-сынып" {{if eq .GroupName "7-сынып" }}selected{{end}}>7-сынып</option>
+                    <option value="8-сынып" {{if eq .GroupName "8-сынып" }}selected{{end}}>8-сынып</option>
+                    <option value="9-сынып" {{if eq .GroupName "9-сынып" }}selected{{end}}>9-сынып</option>
+                    <option value="10-сынып" {{if eq .GroupName "10-сынып" }}selected{{end}}>10-сынып</option>
+                    <option value="11-сынып" {{if eq .GroupName "11-сынып" }}selected{{end}}>11-сынып</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Canva URL (Embed link)</label>
+                <input type="url" name="canva_url" required value="{{.CanvaEmbedURL}}">
+            </div>
+
+            <div class="form-group">
+                <label>Channel ID</label>
+                <input type="text" name="channel_id" required value="{{.AllowedChannelID}}">
+            </div>
+
+            <div class="form-group">
+                <label>Topic ID</label>
+                <input type="number" name="topic_id" value="{{.TopicID}}">
+            </div>
+
+            <button type="submit">Сақтау</button>
+        </form>
+        <a href="/" class="back-link">← Артқа қайту</a>
+    </div>
+</body>
+
+</html>
