@@ -186,7 +186,7 @@ func telegramAuthHandler(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 		Secure:   true,                  // Required for SameSite=None
 		SameSite: http.SameSiteNoneMode, // Allows cross-site cookie for Telegram redirect
-		MaxAge:   3600 * 24,             // 1 day
+		MaxAge:   3600 * 24 * 30,        // 30 days
 	})
 
 	// Redirect to home or dashboard (or the requested page)
