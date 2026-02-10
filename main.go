@@ -271,6 +271,11 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Prevent caching so permissions are checked every time
+	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+	w.Header().Set("Pragma", "no-cache")
+	w.Header().Set("Expires", "0")
+
 	if !allowed {
 		http.Error(w, "You are not a member of the required channel to view this presentation.", http.StatusForbidden)
 		return
