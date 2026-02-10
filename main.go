@@ -127,9 +127,10 @@ func checkTelegramAuth(query url.Values, token string) (map[string]string, error
 	// Create data-check-string
 	var args []string
 	for k, v := range query {
-		if k != "hash" {
-			args = append(args, fmt.Sprintf("%s=%s", k, v[0]))
+		if k == "hash" || k == "redirect_to" {
+			continue
 		}
+		args = append(args, fmt.Sprintf("%s=%s", k, v[0]))
 	}
 	sort.Strings(args)
 	dataCheckString := strings.Join(args, "\n")
