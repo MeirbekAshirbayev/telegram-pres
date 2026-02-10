@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+            background-color: #f0f2f5;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Presentation Access</h2>
+        <p>Please log in with Telegram to verify your access.</p>
+        <!-- 
+             Replace 'YOUR_BOT_USERNAME' with your actual bot username.
+             The 'data-auth-url' should point to your callback URL (e.g., https://your-domain.com/auth/telegram).
+        -->
+        <script async src="https://telegram.org/js/telegram-widget.js?22" 
+                data-telegram-login="{{.BotUsername}}" 
+                data-size="large" 
+                data-auth-url="{{.AuthURL}}" 
+                data-request-access="write"></script>
+    </div>
+</body>
+</html>

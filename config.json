@@ -1,0 +1,10 @@
+{
+  "bot_token": "8201372973:AAEKoOsy7KFQNX_AeTPEr-GLhCzuTexdEoA",
+  "bot_username": "aqquiryq_bot",
+  "admin_ids": [
+    404184174
+  ],
+  "port": ":8080",
+  "db_path": "./presentations.db",
+  "base_url": "https://finical-brielle-unbenignant.ngrok-free.dev"
+}
