@@ -364,8 +364,9 @@ func adminAddHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-	// Redirect back to dashboard with success message (or just back)
-	http.Redirect(w, r, "/?added=true", http.StatusSeeOther)
+		// Redirect back to dashboard with success message (or just back)
+		http.Redirect(w, r, "/?added=true", http.StatusSeeOther)
+	}
 }
 
 func adminEditHandler(w http.ResponseWriter, r *http.Request) {
