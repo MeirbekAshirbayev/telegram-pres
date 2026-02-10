@@ -145,6 +145,12 @@ func checkTelegramAuth(query url.Values, token string) (map[string]string, error
 	hmacHash.Write([]byte(dataCheckString))
 	signature := hex.EncodeToString(hmacHash.Sum(nil))
 
+	// DEBUG LOGGING
+	if signature != hash {
+		log.Printf("Auth FAILED. Expected: %s, Got: %s", signature, hash)
+		log.Printf("Data Check String was:\n%s", dataCheckString)
+	}
+
 	// Compare signatures
 	if signature != hash {
 		return nil, errors.New("signature mismatch")
