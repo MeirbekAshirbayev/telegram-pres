@@ -337,6 +337,22 @@ func adminAddHandler(w http.ResponseWriter, r *http.Request) {
 		channelIDStr := r.FormValue("channel_id")
 		topicIDStr := r.FormValue("topic_id")
 
+		// Fix Canva URL: ensure it ends with ?embed
+		if strings.Contains(canvaURL, "canva.com") && !strings.Contains(canvaURL, "embed") {
+			// If it ends with /view, append ?embed
+			if strings.HasSuffix(canvaURL, "/view") {
+				canvaURL += "?embed"
+			} else if strings.Contains(canvaURL, "/view?") {
+				// Already has params? Check if embed is there (handled by !contains check above)
+				canvaURL += "&embed"
+			} else {
+				// Fallback, just append standard view?embed logic if it looks like a design link
+				// User might paste ".../edit", we might need to handle that, but let's stick to simple fix first
+				// Safest is to tell user, but let's try to append ?embed if safe
+				canvaURL += "?embed"
+			}
+		}
+
 		var channelID int64
 		fmt.Sscanf(channelIDStr, "%d", &channelID)
 
@@ -395,6 +411,15 @@ func adminEditHandler(w http.ResponseWriter, r *http.Request) {
 		canvaURL := r.FormValue("canva_url")
 		channelIDStr := r.FormValue("channel_id")
 		topicIDStr := r.FormValue("topic_id")
+
+		// Fix Canva URL
+		if strings.Contains(canvaURL, "canva.com") && !strings.Contains(canvaURL, "embed") {
+			if strings.HasSuffix(canvaURL, "/view") {
+				canvaURL += "?embed"
+			} else {
+				canvaURL += "?embed"
+			}
+		}
 
 		var channelID int64
 		fmt.Sscanf(channelIDStr, "%d", &channelID)
